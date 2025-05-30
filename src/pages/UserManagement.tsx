@@ -5,7 +5,6 @@ import { useState } from "react"
 import {
   Card,
   Typography,
-  Table,
   Button,
   Input,
   Space,
@@ -17,8 +16,6 @@ import {
   Avatar,
   Tooltip,
   Badge,
-  Tabs,
-  Statistic,
   Row,
   Col,
   Divider,
@@ -38,10 +35,13 @@ import {
   UserSwitchOutlined,
 } from "@ant-design/icons"
 import type { ColumnsType } from "antd/es/table"
+import SectionHeader from '../components/SectionHeader';
+import GridStatsCard from '../components/GridStatsCard';
+import TabsWithBadge from '../components/TabsWithBadge';
+import TableWithAction from '../components/TableWithAction';
 
 const { Title, Text } = Typography
 const { Option } = Select
-const { TabPane } = Tabs
 
 interface UserData {
   key: string
@@ -243,7 +243,6 @@ const UserManagement: React.FC = () => {
         if (role === "Admin") color = "purple"
         else if (role === "Instructor") color = "blue"
         else if (role === "Student") color = "green"
-
         return <Tag color={color}>{role}</Tag>
       },
       filters: [
@@ -263,7 +262,6 @@ const UserManagement: React.FC = () => {
         else if (status === "Inactive") color = "warning"
         else if (status === "Blocked") color = "error"
         else if (status === "Pending") color = "processing"
-
         return <Tag color={color}>{status}</Tag>
       },
       filters: [
@@ -322,180 +320,67 @@ const UserManagement: React.FC = () => {
     },
   ]
 
-  const showModal = () => {
-    setIsModalVisible(true)
-  }
-
+  const showModal = () => setIsModalVisible(true)
   const handleCancel = () => {
     setIsModalVisible(false)
     form.resetFields()
   }
-
   const handleCreate = () => {
     form
       .validateFields()
       .then((values) => {
-        console.log("New user:", values)
+        // Add user logic here
         setIsModalVisible(false)
         form.resetFields()
       })
       .catch((info) => {
-        console.log("Validate Failed:", info)
+        // Handle validation error
       })
   }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => setSelectedRowKeys(newSelectedRowKeys)
+  const rowSelection = { selectedRowKeys, onChange: onSelectChange }
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
+  const stats = [
+    { title: "Total Users", value: users.length, prefix: <TeamOutlined /> },
+    { title: "Students", value: users.filter(u => u.role === "Student").length, prefix: <UserOutlined /> },
+    { title: "Instructors", value: users.filter(u => u.role === "Instructor").length, prefix: <UserSwitchOutlined /> },
+    { title: "Admins", value: users.filter(u => u.role === "Admin").length, prefix: <UserOutlined /> },
+  ]
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }
-
-  const hasSelected = selectedRowKeys.length > 0
+  const tabs = [
+    { key: "all", label: "All Users", count: users.length },
+    { key: "students", label: "Students", count: users.filter(u => u.role === "Student").length },
+    { key: "instructors", label: "Instructors", count: users.filter(u => u.role === "Instructor").length },
+    { key: "admins", label: "Admins", count: users.filter(u => u.role === "Admin").length },
+    { key: "active", label: "Active", count: users.filter(u => u.status === "Active").length },
+    { key: "inactive", label: "Inactive", count: users.filter(u => u.status !== "Active").length },
+  ]
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <Title level={2} className="mb-0">
-            User Management
-          </Title>
-          <Text type="secondary">Manage all users, students, instructors, and admins</Text>
-        </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-          Add User
-        </Button>
-      </div>
+      <SectionHeader
+        title="User Management"
+        subtitle="Manage users, roles, and permissions"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            Add User
+          </Button>
+        }
+      />
 
       {/* Stats Cards */}
-      <Row gutter={[24, 24]} className="mb-6">
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic title="Total Users" value={users.length} prefix={<TeamOutlined />} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Students"
-              value={users.filter((u) => u.role === "Student").length}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Instructors"
-              value={users.filter((u) => u.role === "Instructor").length}
-              prefix={<UserSwitchOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Admins"
-              value={users.filter((u) => u.role === "Admin").length}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <GridStatsCard stats={stats} />
 
       <Card bordered={false} className="shadow-sm">
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane
-            tab={
-              <Badge count={users.length}>
-                <span className="pr-4">All Users</span>
-              </Badge>
-            }
-            key="all"
-          />
-          <TabPane
-            tab={
-              <Badge count={users.filter((u) => u.role === "Student").length}>
-                <span className="pr-4">Students</span>
-              </Badge>
-            }
-            key="students"
-          />
-          <TabPane
-            tab={
-              <Badge count={users.filter((u) => u.role === "Instructor").length}>
-                <span className="pr-4">Instructors</span>
-              </Badge>
-            }
-            key="instructors"
-          />
-          <TabPane
-            tab={
-              <Badge count={users.filter((u) => u.role === "Admin").length}>
-                <span className="pr-4">Admins</span>
-              </Badge>
-            }
-            key="admins"
-          />
-          <TabPane
-            tab={
-              <Badge count={users.filter((u) => u.status === "Active").length}>
-                <span className="pr-4">Active</span>
-              </Badge>
-            }
-            key="active"
-          />
-          <TabPane
-            tab={
-              <Badge count={users.filter((u) => u.status !== "Active").length}>
-                <span className="pr-4">Inactive</span>
-              </Badge>
-            }
-            key="inactive"
-          />
-        </Tabs>
+        <TabsWithBadge
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
 
         <Divider className="my-4" />
 
-        <div className="flex justify-between mb-4 flex-col sm:flex-row gap-4">
-          <Input
-            placeholder="Search users by name, email or ID"
-            prefix={<SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ maxWidth: 400 }}
-            allowClear
-          />
-          <Space>
-            <Tooltip title="Filter">
-              <Button icon={<FilterOutlined />}>Filter</Button>
-            </Tooltip>
-            <Tooltip title="Export">
-              <Button icon={<ExportOutlined />}>Export</Button>
-            </Tooltip>
-            <Tooltip title="Import">
-              <Button icon={<ImportOutlined />}>Import</Button>
-            </Tooltip>
-          </Space>
-        </div>
-
-        <div className="mb-4">
-          {hasSelected && (
-            <div className="bg-blue-50 p-2 rounded flex justify-between items-center">
-              <Text>{`Selected ${selectedRowKeys.length} users`}</Text>
-              <Space>
-                <Button size="small">Bulk Edit</Button>
-                <Button size="small" danger>
-                  Delete Selected
-                </Button>
-              </Space>
-            </div>
-          )}
-        </div>
-
-        <Table
+        <TableWithAction
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredUsers}
@@ -505,6 +390,21 @@ const UserManagement: React.FC = () => {
             showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} users`,
           }}
           scroll={{ x: "max-content" }}
+          searchText={searchText}
+          setSearchText={setSearchText}
+          extraActions={
+            <Space>
+              <Tooltip title="Filter">
+                <Button icon={<FilterOutlined />} onClick={() => console.log("Filter clicked")}></Button>
+              </Tooltip>
+              <Tooltip title="Export">
+                <Button icon={<ExportOutlined />} onClick={() => console.log("Export clicked")}></Button>
+              </Tooltip>
+              <Tooltip title="Import">
+                <Button icon={<ImportOutlined />} onClick={() => console.log("Import clicked")}></Button>
+              </Tooltip>
+            </Space>
+          }
         />
       </Card>
 

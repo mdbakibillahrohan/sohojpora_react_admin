@@ -1,8 +1,10 @@
 "use client"
 
+
 import type React from "react"
 import { useState } from "react"
-import {
+import { Outlet } from "react-router-dom"
+import {  
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
@@ -16,6 +18,7 @@ import {
   ShoppingOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
+  FundProjectionScreenOutlined
 } from "@ant-design/icons"
 import { Avatar, Badge, Button, Dropdown, Layout, Menu, Typography, theme, type MenuProps } from "antd"
 import { useNavigate, useLocation, type RoutesProps } from "react-router-dom"
@@ -88,6 +91,9 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
     return [path || "dashboard"]
   }
 
+
+  
+
   return (
     <Layout className="min-h-screen">
       <Sider
@@ -145,6 +151,11 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
               label: "Course Management",
             },
             {
+              key:"classes",
+              icon: <FundProjectionScreenOutlined />,
+              label: "Upload Classes",
+            },
+            {
               key: "enrollments",
               icon: <ShoppingOutlined />,
               label: "Enrollments",
@@ -194,7 +205,7 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
           <div className="flex items-center gap-4">
             <Button type="text" icon={<QuestionCircleOutlined />} />
 
-            <Dropdown menu={{ items: notifications }} placement="bottomRight">
+            <Dropdown menu={{items: notifications }} placement="bottomRight">
               <Badge count={3} dot>
                 <Button type="text" icon={<BellOutlined style={{ fontSize: "20px" }} />} />
               </Badge>
@@ -219,7 +230,7 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
             borderRadius: borderRadiusLG,
           }}
         >
-          {children}
+          <Outlet/>
         </Content>
         <Footer style={{ textAlign: "center" }}>Sohoj Pora LMS Admin Panel ©{new Date().getFullYear()}</Footer>
       </Layout>

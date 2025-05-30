@@ -14,11 +14,21 @@ import {
   WarningOutlined,
   StarOutlined,
   FileTextOutlined,
+  CheckOutlined,
 } from "@ant-design/icons"
 import type { ColumnsType } from "antd/es/table"
 import type { Dayjs } from "dayjs"
 
-const { Title, Text, Paragraph } = Typography
+import SectionHeader from "../components/SectionHeader"
+import GridStatsCard from "../components/GridStatsCard"
+import TableWithAction from '../components/TableWithAction'
+import CalendarEvents from "../components/CalendarEvents"
+import AvatarLists from "../components/AvatarLists"
+
+
+
+
+const { Title, Text } = Typography
 
 interface RecentEnrollmentData {
   key: string
@@ -39,148 +49,37 @@ interface RecentActivityData {
 const AdminDashboard: React.FC = () => {
   // Sample data for recent enrollments
   const recentEnrollments: RecentEnrollmentData[] = [
-    {
-      key: "1",
-      student: "John Smith",
-      course: "Advanced React Development",
-      date: "2023-05-07",
-      amount: 79.99,
-    },
-    {
-      key: "2",
-      student: "Emily Johnson",
-      course: "Data Science Fundamentals",
-      date: "2023-05-06",
-      amount: 59.99,
-    },
-    {
-      key: "3",
-      student: "Michael Brown",
-      course: "UI/UX Design Masterclass",
-      date: "2023-05-06",
-      amount: 69.99,
-    },
-    {
-      key: "4",
-      student: "Sarah Wilson",
-      course: "Python for Machine Learning",
-      date: "2023-05-05",
-      amount: 89.99,
-    },
-    {
-      key: "5",
-      student: "David Lee",
-      course: "Full Stack Web Development",
-      date: "2023-05-05",
-      amount: 99.99,
-    },
+    { key: "1",student: "John Smith",course: "Advanced React Development",date: "2023-05-07",amount: 79.99,},
+    { key: "2",student: "Emily Johnson",course: "Data Science Fundamentals",date: "2023-05-06",amount: 59.99,},
+    { key: "3",student: "Michael Brown",course: "UI/UX Design Masterclass",date: "2023-05-06",amount: 69.99,},
+    { key: "4",student: "Sarah Wilson",course: "Python for Machine Learning",date: "2023-05-05",amount: 89.99,},
+    { key: "5",student: "David Lee",course: "Full Stack Web Development",date: "2023-05-05",amount: 99.99,},
   ]
 
   // Sample data for recent activities
   const recentActivities: RecentActivityData[] = [
-    {
-      key: "1",
-      user: "John Smith",
-      action: "completed course",
-      time: "2 hours ago",
-      type: "completion",
-    },
-    {
-      key: "2",
-      user: "Admin User",
-      action: "published new course",
-      time: "4 hours ago",
-      type: "course",
-    },
-    {
-      key: "3",
-      user: "Emily Johnson",
-      action: "submitted assignment",
-      time: "5 hours ago",
-      type: "assignment",
-    },
-    {
-      key: "4",
-      user: "Michael Brown",
-      action: "enrolled in course",
-      time: "6 hours ago",
-      type: "enrollment",
-    },
-    {
-      key: "5",
-      user: "Sarah Wilson",
-      action: "left a review",
-      time: "8 hours ago",
-      type: "review",
-    },
-    {
-      key: "6",
-      user: "David Lee",
-      action: "asked a question",
-      time: "10 hours ago",
-      type: "question",
-    },
-    {
-      key: "7",
-      user: "Admin User",
-      action: "updated course content",
-      time: "12 hours ago",
-      type: "course",
-    },
+    { key: "1",user: "John Smith",action: "completed course",time: "2 hours ago",type: "completion",},
+    { key: "2",user: "Admin User",action: "published new course",time: "4 hours ago",type: "course",},
+    { key: "3",user: "Emily Johnson",action: "submitted assignment",time: "5 hours ago",type: "assignment",},
+    { key: "4",user: "Michael Brown",action: "enrolled in course",time: "6 hours ago",type: "enrollment",},
+    { key: "5",user: "Sarah Wilson",action: "left a review",time: "8 hours ago",type: "review",},
+    { key: "6",user: "David Lee",action: "asked a question",time: "10 hours ago",type: "question",},
+    { key: "7",user: "Admin User",action: "updated course content",time: "12 hours ago",type: "course",},
   ]
 
   // Sample data for notifications
   const notifications = [
-    {
-      id: 1,
-      title: "New Course Review",
-      description: "John Smith left a 5-star review on Advanced React Development",
-      time: "2 hours ago",
-      type: "review",
-    },
-    {
-      id: 2,
-      title: "Course Approval Needed",
-      description: "JavaScript Fundamentals course is waiting for your approval",
-      time: "4 hours ago",
-      type: "approval",
-    },
-    {
-      id: 3,
-      title: "New Support Ticket",
-      description: "Emily Johnson opened a new support ticket regarding payment issues",
-      time: "5 hours ago",
-      type: "support",
-    },
-    {
-      id: 4,
-      title: "Low Storage Warning",
-      description: "Your content storage is at 85% capacity",
-      time: "1 day ago",
-      type: "warning",
-    },
+    { id: 1,title: "New Course Review",description: "John Smith left a 5-star review on Advanced React Development",time: "2 hours ago",type: "review",},
+    { id: 2,title: "Course Approval Needed",description: "JavaScript Fundamentals course is waiting for your approval",time: "4 hours ago",type: "approval",},
+    { id: 3,title: "New Support Ticket",description: "Emily Johnson opened a new support ticket regarding payment issues",time: "5 hours ago",type: "support",},
+    { id: 4,title: "Low Storage Warning",description: "Your content storage is at 85% capacity",time: "1 day ago",type: "warning",},
   ]
 
   // Sample data for upcoming events
   const upcomingEvents = [
-    {
-      id: 1,
-      title: "New Course Launch",
-      date: "2023-05-15",
-      type: "course",
-    },
-    {
-      id: 2,
-      title: "Instructor Meeting",
-      date: "2023-05-12",
-      type: "meeting",
-    },
-    {
-      id: 3,
-      title: "System Maintenance",
-      date: "2023-05-20",
-      type: "maintenance",
-    },
+    { id: 1,title: "New Course Launch",date: "2023-05-15",type: "course",},
+    { id: 2,title: "Instructor Meeting",date: "2023-05-12",type: "meeting",},
+    { id: 3,title: "System Maintenance",date: "2023-05-20",type: "maintenance",},
   ]
 
   // Sample data for top courses
@@ -290,7 +189,7 @@ const AdminDashboard: React.FC = () => {
   const dateCellRender = (value: Dayjs) => {
     const dateString = value.format("YYYY-MM-DD")
     const listData = upcomingEvents.filter((event) => event.date === dateString)
-
+    
     return (
       <ul className="events p-0 m-0 list-none">
         {listData.map((item) => (
@@ -304,113 +203,67 @@ const AdminDashboard: React.FC = () => {
       </ul>
     )
   }
+  const stats = [
+      { title:"Total Students", value:3245, prefix: <TeamOutlined/>, valueStyle: {color:"#1890ff"},footer:(<><RiseOutlined/>12% increase</>) },
+      { title:"Total Courses", value:3245, prefix: <BookOutlined/>, valueStyle: {color:"#52c41a"},footer:(<><RiseOutlined/>12% increase</>) },
+      { title:"Completion Rate", value:3245, prefix: <CheckOutlined/>, valueStyle: {color:"#1890ff"},footer:(<><RiseOutlined/>12% increase</>) },
+      { title:"Total Revenue", value:3245, prefix: <DollarOutlined/>, valueStyle: {color:"#1890ff"},footer:(<><RiseOutlined/>12% increase</>) }
+      
+    ]
 
   return (
     <div>
-      <Title level={2}>Admin Dashboard</Title>
-      <Text type="secondary" className="block mb-6">
-        Welcome back! Here's an overview of your learning management system.
-      </Text>
+      <SectionHeader
+        title="Admin Dashboard"
+        subTitle="Overview of platform performance and activities"
+      />
 
-      {/* Stats Cards */}
-      <Row gutter={[24, 24]} className="mb-6">
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm">
-            <Statistic
-              title="Total Students"
-              value={3245}
-              prefix={<TeamOutlined />}
-              valueStyle={{ color: "#1890ff" }}
-            />
-            <div className="mt-2 text-green-500 text-sm flex items-center">
-              <RiseOutlined /> 12% increase
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm">
-            <Statistic title="Total Courses" value={42} prefix={<BookOutlined />} valueStyle={{ color: "#52c41a" }} />
-            <div className="mt-2 text-green-500 text-sm flex items-center">
-              <RiseOutlined /> 8% increase
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm">
-            <Statistic
-              title="Completion Rate"
-              value={67}
-              suffix="%"
-              prefix={<CheckCircleOutlined />}
-              valueStyle={{ color: "#722ed1" }}
-            />
-            <div className="mt-2 text-green-500 text-sm flex items-center">
-              <RiseOutlined /> 5% increase
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm">
-            <Statistic
-              title="Total Revenue"
-              value={356789.45}
-              prefix={<DollarOutlined />}
-              precision={2}
-              valueStyle={{ color: "#eb2f96" }}
-            />
-            <div className="mt-2 text-green-500 text-sm flex items-center">
-              <RiseOutlined /> 15% increase
-            </div>
-          </Card>
-        </Col>
-      </Row>
+      <GridStatsCard
+        stats={stats}
+      />
 
-      <Row gutter={[24, 24]}>
+      <Row gutter={[24,24]}>
         <Col xs={24} lg={16}>
           <Card
             title="Recent Enrollments"
-            bordered={false}
-            className="shadow-sm mb-6"
-            extra={<Button type="link">View All</Button>}
+            extra={<Button type="primary">View All</Button>}
+            className="mb-6 shadow-sm overflow-hidden"
           >
-            <Table dataSource={recentEnrollments} columns={enrollmentColumns} pagination={false} size="small" />
+            <TableWithAction
+              columns={enrollmentColumns}
+              dataSource={recentEnrollments}
+              pagination={{ pageSize: 5 }}
+              size="small"
+            />
           </Card>
 
-          <Row gutter={[24, 24]}>
+          <Row gutter={[24, 24]} className="mt-3" >
             <Col xs={24} md={12}>
-              <Card
+              <Card 
                 title="Top Performing Courses"
-                bordered={false}
+                extra={<Button type="primary">View All</Button>}
                 className="shadow-sm"
-                extra={<Button type="link">View All</Button>}
+                
               >
-                <List
-                  itemLayout="horizontal"
-                  dataSource={topCourses}
-                  renderItem={(item) => (
-                    <List.Item key={item.id}>
-                      <List.Item.Meta
-                        avatar={<Avatar icon={<BookOutlined />} style={{ backgroundColor: "#1890ff" }} />}
-                        title={item.title}
-                        description={
-                          <div>
-                            <div className="flex items-center justify-between">
-                              <span>Enrollments: {item.enrollments}</span>
-                              <span className="flex items-center">
-                                {item.rating} <StarOutlined className="text-yellow-500 ml-1" />
-                              </span>
-                            </div>
-                            <div>
-                              Revenue: $
-                              {item.revenue.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}
-                            </div>
-                          </div>
-                        }
-                      />
-                    </List.Item>
+                <AvatarLists
+                  data={topCourses}
+                  getIcon={(item) => <BookOutlined style={{backgroundColor:"#1890ff"}} />}
+                  getTitle={(item) => item.title}
+                  getDescription={(item) => (
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span>EnrollMents: {item.enrollments}</span>
+                        <span className="flex items-center">
+                          {item.rating} <StarOutlined style={{ color: "#faad14"}} />
+                        </span>
+                      </div>
+                      <div>
+                        Revenue: ${item.revenue.toLocaleString(undefined,{
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}
+                      </div>
+                    </div>
                   )}
                 />
               </Card>
@@ -418,96 +271,78 @@ const AdminDashboard: React.FC = () => {
             <Col xs={24} md={12}>
               <Card
                 title="Upcoming Events"
-                bordered={false}
+                extra={<Button type="primary">View All</Button>}
                 className="shadow-sm"
-                extra={<Button type="link">View Calendar</Button>}
               >
-                <List
-                  itemLayout="horizontal"
-                  dataSource={upcomingEvents}
-                  renderItem={(item) => (
-                    <List.Item key={item.id}>
-                      <List.Item.Meta
-                        avatar={<Avatar icon={<CalendarOutlined />} style={{ backgroundColor: "#722ed1" }} />}
-                        title={
-                          <div className="flex items-center justify-between">
-                            <span>{item.title}</span>
-                            {getEventTypeTag(item.type)}
-                          </div>
-                        }
-                        description={
-                          <div className="flex items-center">
-                            <CalendarOutlined className="mr-1" />
-                            {new Date(item.date).toLocaleDateString()}
-                          </div>
-                        }
-                      />
-                    </List.Item>
+                <AvatarLists
+                  data={upcomingEvents}
+                  getIcon={() => <CalendarOutlined style={{ backgroundColor: "#52c41a" }} />}
+                  getTitle={item=>(
+                    <div className="flex items-center justify-between">
+                      <span>{item.title}</span>
+                      {getEventTypeTag(item.type)}
+                    </div>
+                  )}
+                  getDescription={item=>(
+                    <div className="flex items-center">
+                      <CalendarOutlined className="mr-1"/>
+                      {new Date(item.date).toLocaleDateString()}
+                    </div>
                   )}
                 />
               </Card>
             </Col>
           </Row>
         </Col>
-
-        <Col xs={24} lg={8}>
+        
+        <Col xs={24} lg={8} >
           <Card
             title="Notifications"
-            bordered={false}
             className="shadow-sm mb-6"
-            extra={<Button type="link">Mark All Read</Button>}
+            extra={<Button type="primary">View All</Button>}
           >
-            <List
-              itemLayout="horizontal"
-              dataSource={notifications}
-              renderItem={(item) => (
-                <List.Item key={item.id}>
-                  <List.Item.Meta
-                    avatar={<Avatar icon={getNotificationIcon(item.type)} />}
-                    title={item.title}
-                    description={
-                      <div>
-                        <div>{item.description}</div>
-                        <div className="text-xs text-gray-500 mt-1">{item.time}</div>
-                      </div>
-                    }
-                  />
-                </List.Item>
+            <AvatarLists
+              data={notifications}
+              getIcon={item=>getNotificationIcon(item.type)}
+              getTitle={item => item.title}
+              getDescription={item=>(
+                <div>
+                  <div>{item.description}</div>
+                  <div className="text-xs text-gray-500 mt-1">{item.time}</div>
+                </div>
               )}
             />
           </Card>
-
-          <Card
-            title="Recent Activity"
-            bordered={false}
-            className="shadow-sm"
-            extra={<Button type="link">View All</Button>}
+          <Card 
+            title="Recent Activities" 
+            extra={<Button type="primary">View All</Button>}
+            className="shadow-sm "
           >
-            <List
-              itemLayout="horizontal"
-              dataSource={recentActivities}
-              renderItem={(item) => (
-                <List.Item key={item.key}>
-                  <List.Item.Meta
-                    avatar={<Avatar icon={getActivityIcon(item.type)} />}
-                    title={
-                      <span>
-                        <Text strong>{item.user}</Text> {item.action}
-                      </span>
-                    }
-                    description={<div className="text-xs text-gray-500">{item.time}</div>}
-                  />
-                </List.Item>
+            <AvatarLists
+              data={recentActivities}
+              getIcon={item => getActivityIcon(item.type)}
+              getTitle={item => (
+                <span>
+                  <Text strong>{item.user}</Text> {item.action}
+                </span>
+              )}
+              getDescription={item=>(
+                <div className="text-xs text-gray-500">{item.time}</div>
               )}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card title="Calendar" bordered={false} className="shadow-sm mt-6">
-        <Calendar cellRender={dateCellRender} />
+      <Card title="Calendar" className="shadow-sm !mt-8">
+        <CalendarEvents dateCellRender={dateCellRender} />
       </Card>
+
+
+
     </div>
+
+  
   )
 }
 

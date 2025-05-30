@@ -5,7 +5,6 @@ import { useState } from "react"
 import {
   Card,
   Typography,
-  Table,
   Button,
   Input,
   Space,
@@ -17,12 +16,11 @@ import {
   DatePicker,
   Tooltip,
   Badge,
-  Tabs,
-  Statistic,
   Row,
   Col,
   Divider,
   Progress,
+  Statistic,
 } from "antd"
 import {
   SearchOutlined,
@@ -33,12 +31,17 @@ import {
   BookOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  DollarOutlined,
+  TeamOutlined,
 } from "@ant-design/icons"
 import type { ColumnsType } from "antd/es/table"
+import GridStatsCard from "../components/GridStatsCard"
+import TableWithAction from "../components/TableWithAction"
+import TabsWithBadge from "../components/TabsWithBadge"
+import SectionHeader from "../components/SectionHeader"
 
 const { Title, Text } = Typography
 const { Option } = Select
-const { TabPane } = Tabs
 const { RangePicker } = DatePicker
 
 interface EnrollmentData {
@@ -346,175 +349,77 @@ const EnrollmentManagement: React.FC = () => {
     },
   ]
 
-  const showModal = () => {
-    setIsModalVisible(true)
-  }
-
+  const showModal = () => setIsModalVisible(true)
   const handleCancel = () => {
     setIsModalVisible(false)
     form.resetFields()
   }
-
   const handleCreate = () => {
     form
       .validateFields()
-      .then((values) => {
-        console.log("New enrollment:", values)
+      .then(() => {
+        // Add enrollment logic here
         setIsModalVisible(false)
         form.resetFields()
       })
-      .catch((info) => {
-        console.log("Validate Failed:", info)
-      })
+      .catch(() => {})
   }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => setSelectedRowKeys(newSelectedRowKeys)
+  const rowSelection = { selectedRowKeys, onChange: onSelectChange }
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
+  // Stats for the cards
+  const stats = [
+    { title: "Total Enrollments", value: enrollments.length, prefix: <BookOutlined style={{color:"#00ac09"}} /> },
+    { title: "Active Enrollments", value: enrollments.filter(e => e.status === "Active").length, prefix: <ClockCircleOutlined style={{color:"#ff6600"}} /> },
+    {
+      title: "Completion Rate",
+      value: Math.round((enrollments.filter(e => e.status === "Completed").length / enrollments.length) * 100),
+      suffix: "%",
+      prefix: <CheckCircleOutlined style={{color:"#00b309"}} />,
+      
+    },
+    {
+      title: "Total Revenue",
+      value: enrollments.reduce((sum, enrollment) => sum + enrollment.amount, 0),
+      prefix: <DollarOutlined style={{color:"#008a07"}} />,
+      precision: 2,
+    },
+  ]
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }
-
-  const hasSelected = selectedRowKeys.length > 0
+  // Tabs for enrollment status
+  const tabs = [
+    { key: "all", label: "All Enrollments", count: enrollments.length },
+    { key: "active", label: "Active", count: enrollments.filter(e => e.status === "Active").length },
+    { key: "completed", label: "Completed", count: enrollments.filter(e => e.status === "Completed").length },
+    { key: "notStarted", label: "Not Started", count: enrollments.filter(e => e.status === "Not Started").length },
+    { key: "expired", label: "Expired", count: enrollments.filter(e => e.status === "Expired").length },
+  ]
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <Title level={2} className="mb-0">
-            Enrollment Management
-          </Title>
-          <Text type="secondary">Manage student enrollments and course access</Text>
-        </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-          Add Enrollment
-        </Button>
-      </div>
+      <SectionHeader
+        title="Enrollment Management"
+        subtitle="Manage student enrollments and course access"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            Add Enrollment
+          </Button>
+        }
+      />
 
-      {/* Stats Cards */}
-      <Row gutter={[24, 24]} className="mb-6">
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic title="Total Enrollments" value={enrollments.length} prefix={<BookOutlined />} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Active Enrollments"
-              value={enrollments.filter((e) => e.status === "Active").length}
-              prefix={<ClockCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Completion Rate"
-              value={Math.round(
-                (enrollments.filter((e) => e.status === "Completed").length / enrollments.length) * 100,
-              )}
-              suffix="%"
-              prefix={<CheckCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Total Revenue"
-              value={enrollments.reduce((sum, enrollment) => sum + enrollment.amount, 0)}
-              prefix="$"
-              precision={2}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <GridStatsCard stats={stats} />
 
       <Card bordered={false} className="shadow-sm">
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane
-            tab={
-              <Badge count={enrollments.length}>
-                <span className="pr-4">All Enrollments</span>
-              </Badge>
-            }
-            key="all"
-          />
-          <TabPane
-            tab={
-              <Badge count={enrollments.filter((e) => e.status === "Active").length}>
-                <span className="pr-4">Active</span>
-              </Badge>
-            }
-            key="active"
-          />
-          <TabPane
-            tab={
-              <Badge count={enrollments.filter((e) => e.status === "Completed").length}>
-                <span className="pr-4">Completed</span>
-              </Badge>
-            }
-            key="completed"
-          />
-          <TabPane
-            tab={
-              <Badge count={enrollments.filter((e) => e.status === "Not Started").length}>
-                <span className="pr-4">Not Started</span>
-              </Badge>
-            }
-            key="notStarted"
-          />
-          <TabPane
-            tab={
-              <Badge count={enrollments.filter((e) => e.status === "Expired").length}>
-                <span className="pr-4">Expired</span>
-              </Badge>
-            }
-            key="expired"
-          />
-        </Tabs>
+        <TabsWithBadge
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
 
         <Divider className="my-4" />
 
-        <div className="flex justify-between mb-4 flex-col sm:flex-row gap-4">
-          <Input
-            placeholder="Search by student, email, course or ID"
-            prefix={<SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ maxWidth: 400 }}
-            allowClear
-          />
-          <Space>
-            <RangePicker placeholder={["Start Date", "End Date"]} />
-            <Tooltip title="Filter">
-              <Button icon={<FilterOutlined />}>Filter</Button>
-            </Tooltip>
-            <Tooltip title="Export">
-              <Button icon={<ExportOutlined />}>Export</Button>
-            </Tooltip>
-          </Space>
-        </div>
 
-        <div className="mb-4">
-          {hasSelected && (
-            <div className="bg-blue-50 p-2 rounded flex justify-between items-center">
-              <Text>{`Selected ${selectedRowKeys.length} enrollments`}</Text>
-              <Space>
-                <Button size="small">Send Email</Button>
-                <Button size="small">Extend Access</Button>
-                <Button size="small" danger>
-                  Cancel Selected
-                </Button>
-              </Space>
-            </div>
-          )}
-        </div>
-
-        <Table
+        <TableWithAction
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredEnrollments}
@@ -523,6 +428,8 @@ const EnrollmentManagement: React.FC = () => {
             showSizeChanger: true,
             showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} enrollments`,
           }}
+          specialSearch={true}
+          searchPlaceholder="Search by student, email, course or ID"
           scroll={{ x: "max-content" }}
         />
       </Card>
