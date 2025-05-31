@@ -174,6 +174,7 @@ const Login: React.FC = () => {
                   <input
                     id="remember"
                     type="checkbox"
+                    defaultChecked
                     className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-amber-500 focus:ring-amber-500"
                   />
                 </div>
