@@ -1,5 +1,5 @@
-import type React from "react"
-import { Card, Typography, Row, Col, Statistic, Table, Tag, List, Avatar, Button, Calendar, Badge } from "antd"
+import React from "react"
+import { Card, Typography, Row, Col, Button, Badge, Tag } from "antd"
 import {
   UserOutlined,
   BookOutlined,
@@ -28,10 +28,11 @@ import AvatarLists from "../components/AvatarLists"
 
 
 
-const { Title, Text } = Typography
+const { Text } = Typography
 
 interface RecentEnrollmentData {
   key: string
+  id: string
   student: string
   course: string
   date: string
@@ -39,6 +40,7 @@ interface RecentEnrollmentData {
 }
 
 interface RecentActivityData {
+  id:string
   key: string
   user: string
   action: string
@@ -49,22 +51,22 @@ interface RecentActivityData {
 const AdminDashboard: React.FC = () => {
   // Sample data for recent enrollments
   const recentEnrollments: RecentEnrollmentData[] = [
-    { key: "1",student: "John Smith",course: "Advanced React Development",date: "2023-05-07",amount: 79.99,},
-    { key: "2",student: "Emily Johnson",course: "Data Science Fundamentals",date: "2023-05-06",amount: 59.99,},
-    { key: "3",student: "Michael Brown",course: "UI/UX Design Masterclass",date: "2023-05-06",amount: 69.99,},
-    { key: "4",student: "Sarah Wilson",course: "Python for Machine Learning",date: "2023-05-05",amount: 89.99,},
-    { key: "5",student: "David Lee",course: "Full Stack Web Development",date: "2023-05-05",amount: 99.99,},
+    { key: "1", id:"1",student: "John Smith",course: "Advanced React Development",date: "2023-05-07",amount: 79.99,},
+    { key: "2", id:"2",student: "Emily Johnson",course: "Data Science Fundamentals",date: "2023-05-06",amount: 59.99,},
+    { key: "3", id:"3",student: "Michael Brown",course: "UI/UX Design Masterclass",date: "2023-05-06",amount: 69.99,},
+    { key: "4", id:"4",student: "Sarah Wilson",course: "Python for Machine Learning",date: "2023-05-05",amount: 89.99,},
+    { key: "5", id:"5",student: "David Lee",course: "Full Stack Web Development",date: "2023-05-05",amount: 99.99,},
   ]
 
   // Sample data for recent activities
   const recentActivities: RecentActivityData[] = [
-    { key: "1",user: "John Smith",action: "completed course",time: "2 hours ago",type: "completion",},
-    { key: "2",user: "Admin User",action: "published new course",time: "4 hours ago",type: "course",},
-    { key: "3",user: "Emily Johnson",action: "submitted assignment",time: "5 hours ago",type: "assignment",},
-    { key: "4",user: "Michael Brown",action: "enrolled in course",time: "6 hours ago",type: "enrollment",},
-    { key: "5",user: "Sarah Wilson",action: "left a review",time: "8 hours ago",type: "review",},
-    { key: "6",user: "David Lee",action: "asked a question",time: "10 hours ago",type: "question",},
-    { key: "7",user: "Admin User",action: "updated course content",time: "12 hours ago",type: "course",},
+    { id: "1", key: "1",user: "John Smith",action: "completed course",time: "2 hours ago",type: "completion",},
+    { id: "2", key: "2",user: "Admin User",action: "published new course",time: "4 hours ago",type: "course",},
+    { id: "3", key: "3",user: "Emily Johnson",action: "submitted assignment",time: "5 hours ago",type: "assignment",},
+    { id: "4", key: "4",user: "Michael Brown",action: "enrolled in course",time: "6 hours ago",type: "enrollment",},
+    { id: "5", key: "5",user: "Sarah Wilson",action: "left a review",time: "8 hours ago",type: "review",},
+    { id: "6", key: "6",user: "David Lee",action: "asked a question",time: "10 hours ago",type: "question",},
+    { id: "7", key: "7",user: "Admin User",action: "updated course content",time: "12 hours ago",type: "course",},
   ]
 
   // Sample data for notifications
@@ -86,6 +88,7 @@ const AdminDashboard: React.FC = () => {
   const topCourses = [
     {
       id: 1,
+      key:1,
       title: "Advanced React Development",
       enrollments: 1245,
       rating: 4.8,
@@ -93,6 +96,7 @@ const AdminDashboard: React.FC = () => {
     },
     {
       id: 2,
+      key:2,
       title: "Data Science Fundamentals",
       enrollments: 980,
       rating: 4.7,
@@ -100,6 +104,7 @@ const AdminDashboard: React.FC = () => {
     },
     {
       id: 3,
+      key:3,
       title: "UI/UX Design Masterclass",
       enrollments: 875,
       rating: 4.9,
@@ -211,11 +216,13 @@ const AdminDashboard: React.FC = () => {
       
     ]
 
+  const [searchText, setSearchText] = React.useState<string>("");
+
   return (
     <div>
       <SectionHeader
         title="Admin Dashboard"
-        subTitle="Overview of platform performance and activities"
+        subtitle="Overview of platform performance and activities"
       />
 
       <GridStatsCard
@@ -229,11 +236,13 @@ const AdminDashboard: React.FC = () => {
             extra={<Button type="primary">View All</Button>}
             className="mb-6 shadow-sm overflow-hidden"
           >
-            <TableWithAction
+            <TableWithAction<RecentEnrollmentData>
               columns={enrollmentColumns}
               dataSource={recentEnrollments}
               pagination={{ pageSize: 5 }}
               size="small"
+              searchText={searchText}
+              setSearchText={setSearchText}
             />
           </Card>
 
@@ -247,12 +256,12 @@ const AdminDashboard: React.FC = () => {
               >
                 <AvatarLists
                   data={topCourses}
-                  getIcon={(item) => <BookOutlined style={{backgroundColor:"#1890ff"}} />}
-                  getTitle={(item) => item.title}
-                  getDescription={(item) => (
+                  getIcon={() => <BookOutlined style={{backgroundColor:"#1890ff"}} />}
+                  getTitle={item => item.title}
+                  getDescription={item => (
                     <div>
                       <div className="flex items-center justify-between">
-                        <span>EnrollMents: {item.enrollments}</span>
+                        <span>Enrollments: {item.enrollments}</span>
                         <span className="flex items-center">
                           {item.rating} <StarOutlined style={{ color: "#faad14"}} />
                         </span>

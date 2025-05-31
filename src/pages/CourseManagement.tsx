@@ -4,7 +4,6 @@ import type React from "react"
 import { useState } from "react"
 import {
   Card,
-  Typography,
   Button,
   Input,
   Space,
@@ -14,8 +13,6 @@ import {
   Form,
   Select,
   Tooltip,
-  Badge,
-  Statistic,
   Row,
   Col,
   Divider,
@@ -25,7 +22,6 @@ import {
   Progress,
 } from "antd"
 import {
-  SearchOutlined,
   PlusOutlined,
   MoreOutlined,
   FilterOutlined,
@@ -48,7 +44,6 @@ import TableWithAction from '../components/TableWithAction';
 import TabsWithBadge from "../components/TabsWithBadge"
 import SectionHeader from "../components/SectionHeader"
 
-const { Title, Text } = Typography
 const { Option } = Select
 const { TextArea } = Input
 
@@ -425,7 +420,7 @@ const CourseManagement: React.FC = () => {
     form
       .validateFields()
       .then((values) => {
-        // Add course logic here
+        console.log(values)
         setIsModalVisible(false)
         form.resetFields()
       })
@@ -504,7 +499,7 @@ const CourseManagement: React.FC = () => {
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} courses`,
+            showTotal: (total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} courses`,
           }}
           scroll={{ x: "max-content" }}
           searchPlaceholder="Search courses by title, instructor or ID"

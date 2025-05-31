@@ -1,10 +1,22 @@
 import {Tabs,Badge} from 'antd';
 
 
-const TabsWithBadge:React.FC = ({activeKey,tabs,onChange}) => {
+interface TabWithBadge {
+    key: string;
+    label: React.ReactNode;
+    count: number;
+}
+
+interface TabsWithBadgeProps {
+    activeKey: string;
+    tabs: TabWithBadge[];
+    onChange: (activeKey: string) => void;
+}
+
+const TabsWithBadge: React.FC<TabsWithBadgeProps> = ({ activeKey, tabs, onChange }) => {
     return (
         <Tabs activeKey={activeKey} onChange={onChange} >
-            {tabs.map((tab,index)=>(
+            {tabs.map((tab) => (
                 <Tabs.TabPane
                     tab={
                         <Badge count={tab.count}>

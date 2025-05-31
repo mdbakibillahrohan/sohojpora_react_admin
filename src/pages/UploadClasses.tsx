@@ -67,6 +67,7 @@ const UploadClasses: React.FC = () => {
     form
       .validateFields()
       .then((values) => {
+        console.log(values)
         setUploading(true)
         setTimeout(() => {
           setUploading(false)

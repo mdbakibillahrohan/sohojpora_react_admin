@@ -31,44 +31,44 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, } = Typography;
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 
 // Mock data for charts
-const mockLineData = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  datasets: [
-    {
-      label: "Enrollments",
-      data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 150, 180, 210],
-      borderColor: "#1890ff",
-      backgroundColor: "rgba(24, 144, 255, 0.2)",
-    },
-    {
-      label: "Revenue",
-      data: [
-        1500, 2000, 2250, 2500, 2450, 3000, 3500, 4550, 6250, 7500, 9000, 10500,
-      ],
-      borderColor: "#52c41a",
-      backgroundColor: "rgba(82, 196, 26, 0.2)",
-    },
-  ],
-};
+// const mockLineData = {
+//   labels: [
+//     "Jan",
+//     "Feb",
+//     "Mar",
+//     "Apr",
+//     "May",
+//     "Jun",
+//     "Jul",
+//     "Aug",
+//     "Sep",
+//     "Oct",
+//     "Nov",
+//     "Dec",
+//   ],
+//   datasets: [
+//     {
+//       label: "Enrollments",
+//       data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 150, 180, 210],
+//       borderColor: "#1890ff",
+//       backgroundColor: "rgba(24, 144, 255, 0.2)",
+//     },
+//     {
+//       label: "Revenue",
+//       data: [
+//         1500, 2000, 2250, 2500, 2450, 3000, 3500, 4550, 6250, 7500, 9000, 10500,
+//       ],
+//       borderColor: "#52c41a",
+//       backgroundColor: "rgba(82, 196, 26, 0.2)",
+//     },
+//   ],
+// };
 
 // Mock data for tables
 interface CourseAnalyticsData {
@@ -94,10 +94,7 @@ interface StudentAnalyticsData {
 }
 
 const Analytics: React.FC = () => {
-  const [dateRange, setDateRange] = useState<[string, string]>([
-    "2023-01-01",
-    "2023-12-31",
-  ]);
+  // Removed unused dateRange state
   const [activeTab, setActiveTab] = useState("overview");
 
   // Sample data for top courses
@@ -342,11 +339,6 @@ const Analytics: React.FC = () => {
               dayjs(new Date("2023-12-31")),
             ]}
             format="YYYY-MM-DD"
-            onChange={(dates, dateStrings) => {
-              if (dates) {
-                setDateRange([dateStrings[0], dateStrings[1]]);
-              }
-            }}
           />
           <Select defaultValue="all" style={{ width: 150 }}>
             <Option value="all">All Courses</Option>

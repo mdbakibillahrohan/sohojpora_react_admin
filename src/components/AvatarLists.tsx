@@ -1,7 +1,19 @@
 import React from 'react';
 import {List, Avatar} from 'antd';
 
-const AvatarLists:React.FC = ({getIcon,data,getTitle, getDescription}) => {
+type AvatarItem = {
+    id: string | number;
+    [key: string]:  any;
+};
+
+type AvatarListsProps = {
+    getIcon: (item: AvatarItem) => React.ReactNode;
+    data: AvatarItem[];
+    getTitle: (item: AvatarItem) => React.ReactNode;
+    getDescription: (item: AvatarItem) => React.ReactNode;
+};
+
+const AvatarLists: React.FC<AvatarListsProps> = ({getIcon, data, getTitle, getDescription}) => {
     return (
         <div>
             <List

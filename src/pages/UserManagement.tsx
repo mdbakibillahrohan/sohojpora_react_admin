@@ -4,7 +4,6 @@ import type React from "react"
 import { useState } from "react"
 import {
   Card,
-  Typography,
   Button,
   Input,
   Space,
@@ -15,13 +14,11 @@ import {
   Select,
   Avatar,
   Tooltip,
-  Badge,
   Row,
   Col,
   Divider,
 } from "antd"
 import {
-  SearchOutlined,
   PlusOutlined,
   MoreOutlined,
   UserOutlined,
@@ -40,7 +37,6 @@ import GridStatsCard from '../components/GridStatsCard';
 import TabsWithBadge from '../components/TabsWithBadge';
 import TableWithAction from '../components/TableWithAction';
 
-const { Title, Text } = Typography
 const { Option } = Select
 
 interface UserData {
@@ -330,11 +326,12 @@ const UserManagement: React.FC = () => {
       .validateFields()
       .then((values) => {
         // Add user logic here
+        console.log(values)
         setIsModalVisible(false)
         form.resetFields()
       })
       .catch((info) => {
-        // Handle validation error
+        console.log(info)
       })
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => setSelectedRowKeys(newSelectedRowKeys)
@@ -387,7 +384,7 @@ const UserManagement: React.FC = () => {
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} users`,
+            showTotal: (total: number, range: [number, number]) => `${range[0]}-${range[1]} of ${total} users`,
           }}
           scroll={{ x: "max-content" }}
           searchText={searchText}

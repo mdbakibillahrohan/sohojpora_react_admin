@@ -21,12 +21,12 @@ import {
   FundProjectionScreenOutlined
 } from "@ant-design/icons"
 import { Avatar, Badge, Button, Dropdown, Layout, Menu, Typography, theme, type MenuProps } from "antd"
-import { useNavigate, useLocation, type RoutesProps } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 const { Header, Sider, Content, Footer } = Layout
 const { Title } = Typography
 
-const MainLayout: React.FC = ({ children }: RoutesProps) => {
+const MainLayout: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
@@ -64,7 +64,7 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
     },
   ]
 
-  const notifications = [
+  const notifications: MenuProps['items'] = [
     {
       key: "1",
       label: "John Smith left a review",
@@ -78,7 +78,7 @@ const MainLayout: React.FC = ({ children }: RoutesProps) => {
       label: "System update scheduled",
     },
     {
-      type: "divider",
+      type: "divider" as const,
     },
     {
       key: "4",

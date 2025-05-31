@@ -81,7 +81,7 @@ const Login: React.FC = () => {
                 {slideWithContent[activeSlide].description}
               </p>
               <div className="flex gap-2">
-                {slideWithContent.map((e,index)=> (
+                {slideWithContent.map((_,index)=> (
                     <div
                         key={index}
                         onClick={()=> setActiveSlide(index)}

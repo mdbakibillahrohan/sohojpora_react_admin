@@ -309,9 +309,9 @@ const Dashboard: React.FC = () => {
       { key: "lastMonth", label: "Last Month" },
       { key: "custom", label: "Custom Range" },
     ],
-    onClick: ({ key, domEvent }: { key: string; domEvent: any }) => {
-      const label = domEvent.target.innerText
-      handleDateRangeChange(key, label)
+    onClick: (info: { key: string; domEvent: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>; item: React.ReactInstance; keyPath: string[]; selectedKeys?: string[]; }) => {
+      const selectedItem = dateRangeMenu.items.find((item) => item.key === info.key)
+      handleDateRangeChange(info.key, selectedItem ? selectedItem.label : "")
     },
   }
 
@@ -508,30 +508,30 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[24, 24]} className="mt-6">
         <Col xs={24}>
-          <Card title="Revenue Overview" bordered={false} className="shadow-sm">
+            <Card title="Revenue Overview" bordered={false} className="shadow-sm">
             <Line
               data={revenueData}
               xField="date"
               yField="value"
               smooth
               animation={{
-                appear: {
-                  animation: "path-in",
-                  duration: 1000,
-                },
+              appear: {
+                animation: "path-in",
+                duration: 1000,
+              },
               }}
               color="#52c41a"
               point={{
-                size: 5,
-                shape: "diamond",
+              size: 5,
+              shape: "diamond",
               }}
               meta={{
-                value: {
-                  formatter: (v) => `$${v.toLocaleString()}`,
-                },
+              value: {
+                formatter: (v: number) => `$${v.toLocaleString()}`,
+              },
               }}
             />
-          </Card>
+            </Card>
         </Col>
       </Row>
 

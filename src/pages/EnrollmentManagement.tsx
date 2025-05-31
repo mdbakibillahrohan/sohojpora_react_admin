@@ -4,35 +4,26 @@ import type React from "react"
 import { useState } from "react"
 import {
   Card,
-  Typography,
   Button,
   Input,
-  Space,
   Tag,
   Dropdown,
   Modal,
   Form,
   Select,
   DatePicker,
-  Tooltip,
-  Badge,
   Row,
   Col,
   Divider,
   Progress,
-  Statistic,
 } from "antd"
 import {
-  SearchOutlined,
   PlusOutlined,
   MoreOutlined,
-  FilterOutlined,
-  ExportOutlined,
   BookOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   DollarOutlined,
-  TeamOutlined,
 } from "@ant-design/icons"
 import type { ColumnsType } from "antd/es/table"
 import GridStatsCard from "../components/GridStatsCard"
@@ -40,9 +31,7 @@ import TableWithAction from "../components/TableWithAction"
 import TabsWithBadge from "../components/TabsWithBadge"
 import SectionHeader from "../components/SectionHeader"
 
-const { Title, Text } = Typography
 const { Option } = Select
-const { RangePicker } = DatePicker
 
 interface EnrollmentData {
   key: string
@@ -404,7 +393,7 @@ const EnrollmentManagement: React.FC = () => {
           <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
             Add Enrollment
           </Button>
-        }
+        } 
       />
 
       <GridStatsCard stats={stats} />
@@ -413,24 +402,26 @@ const EnrollmentManagement: React.FC = () => {
         <TabsWithBadge
           activeKey={activeTab}
           onChange={setActiveTab}
-          tabs={tabs}
+          tabs={tabs} 
         />
 
         <Divider className="my-4" />
 
 
-        <TableWithAction
+        <TableWithAction<EnrollmentData>
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredEnrollments}
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} enrollments`,
+            showTotal: (total:number, range: number[]) => `${range[0]}-${range[1]} of ${total} enrollments`,
           }}
           specialSearch={true}
           searchPlaceholder="Search by student, email, course or ID"
           scroll={{ x: "max-content" }}
+          searchText={searchText}
+          setSearchText={setSearchText}
         />
       </Card>
 
@@ -438,22 +429,22 @@ const EnrollmentManagement: React.FC = () => {
         <Form form={form} layout="vertical" initialValues={{ status: "Active", paymentStatus: "Paid" }}>
           <Form.Item name="student" label="Student" rules={[{ required: true, message: "Please select a student" }]}>
             <Select showSearch placeholder="Select a student" optionFilterProp="children">
-              <Option value="John Smith">John Smith (john.smith@example.com)</Option>
-              <Option value="Emily Johnson">Emily Johnson (emily.j@example.com)</Option>
-              <Option value="Michael Brown">Michael Brown (michael.b@example.com)</Option>
-              <Option value="Sarah Wilson">Sarah Wilson (sarah.w@example.com)</Option>
-              <Option value="David Lee">David Lee (david.lee@example.com)</Option>
+              {enrollments.map(enrollment=>(
+                <Option key={enrollment.id} value={enrollment.student}>
+                  {enrollment.student} ({enrollment.email})
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
           <Form.Item name="course" label="Course" rules={[{ required: true, message: "Please select a course" }]}>
             <Select showSearch placeholder="Select a course" optionFilterProp="children">
-              <Option value="Advanced React Development">Advanced React Development</Option>
-              <Option value="Data Science Fundamentals">Data Science Fundamentals</Option>
-              <Option value="UI/UX Design Masterclass">UI/UX Design Masterclass</Option>
-              <Option value="Python for Machine Learning">Python for Machine Learning</Option>
-              <Option value="Full Stack Web Development">Full Stack Web Development</Option>
-            </Select>
+              {enrollments.map(enrollment=>(
+                <Option key={enrollment.id} value={enrollment.course}>
+                  {enrollment.course}
+                </Option>
+              ))} 
+              </Select>
           </Form.Item>
 
           <Row gutter={16}>

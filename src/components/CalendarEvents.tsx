@@ -1,10 +1,15 @@
 import React from 'react';
-import { Calendar,Badge } from 'antd';
+import { Calendar } from 'antd';
+import type { Dayjs } from 'dayjs';
 
-const CalendarEvents:React.FC = ({events,dataCellRender}) => {
+interface CalendarEventsProps {
+    dateCellRender: (date: Dayjs) => React.ReactNode;
+}
+
+const CalendarEvents: React.FC<CalendarEventsProps> = ({ dateCellRender }) => {
     return (
         <div>
-            <Calendar cellRender={dataCellRender} />
+            <Calendar cellRender={dateCellRender} />
         </div>
     );
 };

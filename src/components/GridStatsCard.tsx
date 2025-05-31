@@ -1,6 +1,26 @@
 import {Row,Col,Card,Statistic} from 'antd';
 
-const GridStatsCard:React.FC = ({stats}) => {
+
+import React from "react"
+
+interface Stat {
+  title: string
+  value: number
+  prefix?: React.ReactNode
+  suffix?: string
+  precision?: number
+  footer?: React.ReactNode
+}
+
+interface GridStatsCardProps {
+  stats: Stat[]
+}
+
+
+
+
+
+const GridStatsCard: React.FC<GridStatsCardProps> = ({stats}) => {
     return (
         <div>
             <Row gutter={[24,24]} className='mb-6 flex w-full !flex-col items-center md:!flex-row'>

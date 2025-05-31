@@ -2,7 +2,27 @@ import {Table, Input, Button, Tooltip, Space, DatePicker} from 'antd';
 import { SearchOutlined, FilterOutlined , ExportOutlined }  from '@ant-design/icons';
 const {RangePicker} = DatePicker;
 
-const TableWithAction:React.FC = ({columns,dataSource,searchPlaceholder,searchText,setSearchText,extraAction,specialSearch, ...rest}) => {
+
+
+
+
+
+
+import type { ColumnsType } from 'antd/es/table';
+import React from 'react';
+
+interface TableWithActionProps<T = unknown> {
+    columns: ColumnsType<T>;
+    dataSource: T[];
+    searchPlaceholder?: string;
+    searchText: string;
+    setSearchText: (value: string) => void;
+    extraAction?: React.ReactNode;
+    specialSearch?: boolean;
+    [key: string]: unknown; 
+}
+
+const TableWithAction = <T extends object >({columns, dataSource, searchPlaceholder, searchText, setSearchText, extraAction, specialSearch, ...rest}: TableWithActionProps<T>) => {
     return (
         <div>
             <div className='flex justify-between mb-4 flex-col sm:flex-row gap-4'>
