@@ -33,7 +33,6 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route element={<MainLayout />} > 
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/users" element={<UserManagement />} />
               <Route path="/courses" element={<CourseManagement />} />
@@ -43,6 +42,7 @@ function App() {
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/classes" element={<UploadClasses/>} />
+              <Route path="*" element={<Navigate to='/login' replace/>} />
             </Route>
           </Routes>
       </Router>

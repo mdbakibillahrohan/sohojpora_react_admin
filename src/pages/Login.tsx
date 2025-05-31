@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { Input, Button, Card } from "antd";
 import { LockOutlined } from "@ant-design/icons";
 import { ShieldAlert, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("bardenhill@gmail.com");
+  const [password, setPassword] = useState("00000000");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [activeSlide,setActiveSlide] = useState(0);
+  const navigate = useNavigate();
+
 
   const slideWithContent = [
     {
@@ -38,6 +39,7 @@ const Login: React.FC = () => {
     setTimeout(() => {
       console.log("Admin login:", { email, password });
       setIsLoading(false);
+      navigate("/dashboard");
     }, 1000);
   };
 
