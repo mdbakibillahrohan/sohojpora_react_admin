@@ -18,8 +18,6 @@ import {
   Divider,
   Space,
   message,
-  Steps,
-  Collapse,
   Modal,
   List,
   Tag,
@@ -45,8 +43,7 @@ const { Title, Text, Paragraph } = Typography
 const { Option } = Select
 const { TabPane } = Tabs
 const { TextArea } = Input
-const { Step } = Steps
-const { Panel } = Collapse
+
 
 const CourseEditor: React.FC = () => {
   const { id } = useParams<{ id: string }>()

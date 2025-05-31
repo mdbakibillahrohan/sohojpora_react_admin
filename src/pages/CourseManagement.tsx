@@ -4,8 +4,6 @@ import type React from "react"
 import { useState } from "react"
 import {
   Card,
-  Typography,
-  Table,
   Button,
   Input,
   Space,
@@ -15,9 +13,6 @@ import {
   Form,
   Select,
   Tooltip,
-  Badge,
-  Tabs,
-  Statistic,
   Row,
   Col,
   Divider,
@@ -27,7 +22,6 @@ import {
   Progress,
 } from "antd"
 import {
-  SearchOutlined,
   PlusOutlined,
   MoreOutlined,
   FilterOutlined,
@@ -45,10 +39,12 @@ import {
 } from "@ant-design/icons"
 import type { ColumnsType } from "antd/es/table"
 import type { UploadProps } from "antd"
+import GridStatsCard from "../components/GridStatsCard"
+import TableWithAction from '../components/TableWithAction';
+import TabsWithBadge from "../components/TabsWithBadge"
+import SectionHeader from "../components/SectionHeader"
 
-const { Title, Text } = Typography
 const { Option } = Select
-const { TabPane } = Tabs
 const { TextArea } = Input
 
 interface CourseData {
@@ -293,7 +289,6 @@ const CourseManagement: React.FC = () => {
         if (level === "Beginner") color = "green"
         else if (level === "Intermediate") color = "blue"
         else if (level === "Advanced") color = "purple"
-
         return <Tag color={color}>{level}</Tag>
       },
       filters: [
@@ -319,7 +314,6 @@ const CourseManagement: React.FC = () => {
       render: (status, record) => {
         let color = "default"
         let icon = null
-
         if (status === "Published") {
           color = "success"
           icon = <CheckCircleOutlined />
@@ -333,7 +327,6 @@ const CourseManagement: React.FC = () => {
           color = "default"
           icon = <FileTextOutlined />
         }
-
         return (
           <div>
             <Tag color={color} icon={icon}>
@@ -418,38 +411,45 @@ const CourseManagement: React.FC = () => {
     },
   ]
 
-  const showModal = () => {
-    setIsModalVisible(true)
-  }
-
+  const showModal = () => setIsModalVisible(true)
   const handleCancel = () => {
     setIsModalVisible(false)
     form.resetFields()
   }
-
   const handleCreate = () => {
     form
       .validateFields()
       .then((values) => {
-        console.log("New course:", values)
+        console.log(values)
         setIsModalVisible(false)
         form.resetFields()
       })
-      .catch((info) => {
-        console.log("Validate Failed:", info)
-      })
+      .catch(() => {})
   }
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => setSelectedRowKeys(newSelectedRowKeys)
+  const rowSelection = { selectedRowKeys, onChange: onSelectChange }
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys)
+  // Stats for the cards
+  const stats = [
+    { title: "Total Courses", value: courses.length, prefix: <BookOutlined /> },
+    { title: "Published", value: courses.filter((c) => c.status === "Published").length, prefix: <CheckCircleOutlined /> },
+    { title: "Total Students", value: courses.reduce((sum, course) => sum + course.students, 0), prefix: <TeamOutlined /> },
+    { title: "Total Revenue", value: courses.reduce((sum, course) => sum + course.price * course.students, 0), prefix: <DollarOutlined />, precision: 2 },
+  ]
+
+  // Tabs for course status
+  const tabs = [
+    { key: "all", label: "All Courses", count: courses.length },
+    { key: "published", label: "Published", count: courses.filter(c => c.status === "Published").length },
+    { key: "draft", label: "Drafts", count: courses.filter(c => c.status === "Draft").length },
+    { key: "review", label: "In Review", count: courses.filter(c => c.status === "Review").length },
+    { key: "archived", label: "Archived", count: courses.filter(c => c.status === "Archived").length },
+  ]
+
+  // Mock function for navigation
+  const navigate = (path: string) => {
+    console.log(`Navigating to: ${path}`)
   }
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }
-
-  const hasSelected = selectedRowKeys.length > 0
 
   const uploadProps: UploadProps = {
     name: "file",
@@ -469,151 +469,52 @@ const CourseManagement: React.FC = () => {
     },
   }
 
-  // Mock function for navigation
-  const navigate = (path: string) => {
-    console.log(`Navigating to: ${path}`)
-  }
-
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <Title level={2} className="mb-0">
-            Course Management
-          </Title>
-          <Text type="secondary">Manage all courses, content, and curriculum</Text>
-        </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-          Create Course
-        </Button>
-      </div>
+      <SectionHeader
+        title="Course Management"
+        subtitle="Manage all courses, content, and curriculum"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            Create Course
+          </Button>
+        }
+      />
 
-      {/* Stats Cards */}
-      <Row gutter={[24, 24]} className="mb-6">
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic title="Total Courses" value={courses.length} prefix={<BookOutlined />} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Published"
-              value={courses.filter((c) => c.status === "Published").length}
-              prefix={<CheckCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Total Students"
-              value={courses.reduce((sum, course) => sum + course.students, 0)}
-              prefix={<TeamOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} className="shadow-sm text-center">
-            <Statistic
-              title="Total Revenue"
-              value={courses.reduce((sum, course) => sum + course.price * course.students, 0)}
-              prefix="$"
-              precision={2}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <GridStatsCard stats={stats} />
 
       <Card bordered={false} className="shadow-sm">
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane
-            tab={
-              <Badge count={courses.length}>
-                <span className="pr-4">All Courses</span>
-              </Badge>
-            }
-            key="all"
-          />
-          <TabPane
-            tab={
-              <Badge count={courses.filter((c) => c.status === "Published").length}>
-                <span className="pr-4">Published</span>
-              </Badge>
-            }
-            key="published"
-          />
-          <TabPane
-            tab={
-              <Badge count={courses.filter((c) => c.status === "Draft").length}>
-                <span className="pr-4">Drafts</span>
-              </Badge>
-            }
-            key="draft"
-          />
-          <TabPane
-            tab={
-              <Badge count={courses.filter((c) => c.status === "Review").length}>
-                <span className="pr-4">In Review</span>
-              </Badge>
-            }
-            key="review"
-          />
-          <TabPane
-            tab={
-              <Badge count={courses.filter((c) => c.status === "Archived").length}>
-                <span className="pr-4">Archived</span>
-              </Badge>
-            }
-            key="archived"
-          />
-        </Tabs>
+        <TabsWithBadge
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
 
         <Divider className="my-4" />
 
-        <div className="flex justify-between mb-4 flex-col sm:flex-row gap-4">
-          <Input
-            placeholder="Search courses by title, instructor or ID"
-            prefix={<SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ maxWidth: 400 }}
-            allowClear
-          />
-          <Space>
-            <Tooltip title="Filter">
-              <Button icon={<FilterOutlined />}>Filter</Button>
-            </Tooltip>
-            <Tooltip title="Export">
-              <Button icon={<ExportOutlined />}>Export</Button>
-            </Tooltip>
-          </Space>
-        </div>
-
-        <div className="mb-4">
-          {hasSelected && (
-            <div className="bg-blue-50 p-2 rounded flex justify-between items-center">
-              <Text>{`Selected ${selectedRowKeys.length} courses`}</Text>
-              <Space>
-                <Button size="small">Bulk Edit</Button>
-                <Button size="small" danger>
-                  Delete Selected
-                </Button>
-              </Space>
-            </div>
-          )}
-        </div>
-
-        <Table
+        <TableWithAction
           rowSelection={rowSelection}
           columns={columns}
           dataSource={filteredCourses}
           pagination={{
             pageSize: 10,
             showSizeChanger: true,
-            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} courses`,
+            showTotal: (total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} courses`,
           }}
           scroll={{ x: "max-content" }}
+          searchPlaceholder="Search courses by title, instructor or ID"
+          searchText={searchText}
+          setSearchText={setSearchText}
+          extraActions={
+            <Space>
+              <Tooltip title="Filter">
+                <Button icon={<FilterOutlined />}>Filter</Button>
+              </Tooltip>
+              <Tooltip title="Export">
+                <Button icon={<ExportOutlined />}>Export</Button>
+              </Tooltip>
+            </Space>
+          }
         />
       </Card>
 
