@@ -1,6 +1,6 @@
 import { ConfigProvider } from "antd"
 import MainLayout from "./layouts/MainLayout"
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import AdminDashboard from "./pages/AdminDashboard"
 import UserManagement from "./pages/UserManagement"
 import CourseManagement from "./pages/CourseManagement"
