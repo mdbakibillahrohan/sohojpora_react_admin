@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-
-import type React from "react"
-import { useState } from "react"
-import { Outlet } from "react-router-dom"
-import {  
+import type React from "react";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
@@ -18,21 +17,30 @@ import {
   ShoppingOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
-  FundProjectionScreenOutlined
-} from "@ant-design/icons"
-import { Avatar, Badge, Button, Dropdown, Layout, Menu, Typography, theme, type MenuProps } from "antd"
-import { useNavigate, useLocation } from "react-router-dom"
+} from "@ant-design/icons";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Dropdown,
+  Layout,
+  Menu,
+  Typography,
+  theme,
+  type MenuProps,
+} from "antd";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const { Header, Sider, Content, Footer } = Layout
-const { Title } = Typography
+const { Header, Sider, Content, Footer } = Layout;
+const { Title } = Typography;
 
 const MainLayout: React.FC = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [collapsed, setCollapsed] = useState(false)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG, colorPrimary },
-  } = theme.useToken()
+  } = theme.useToken();
 
   const items: MenuProps["items"] = [
     {
@@ -62,9 +70,9 @@ const MainLayout: React.FC = () => {
       icon: <LogoutOutlined />,
       danger: true,
     },
-  ]
+  ];
 
-  const notifications: MenuProps['items'] = [
+  const notifications: MenuProps["items"] = [
     {
       key: "1",
       label: "John Smith left a review",
@@ -84,15 +92,12 @@ const MainLayout: React.FC = () => {
       key: "4",
       label: "View all notifications",
     },
-  ]
+  ];
 
   const getSelectedKeys = () => {
-    const path = location.pathname.split("/")[1]
-    return [path || "dashboard"]
-  }
-
-
-  
+    const path = location.pathname.split("/")[1];
+    return [path || "dashboard"];
+  };
 
   return (
     <Layout className="min-h-screen">
@@ -132,7 +137,7 @@ const MainLayout: React.FC = () => {
           selectedKeys={getSelectedKeys()}
           style={{ background: colorPrimary }}
           onClick={(e) => {
-            navigate("/" + e.key)
+            navigate("/" + e.key);
           }}
           items={[
             {
@@ -146,15 +151,15 @@ const MainLayout: React.FC = () => {
               label: "User Management",
             },
             {
-              key: "courses",
+              key: "book-manager",
               icon: <BookOutlined />,
-              label: "Course Management",
+              label: "Book Management",
             },
-            {
-              key:"classes",
-              icon: <FundProjectionScreenOutlined />,
-              label: "Upload Classes",
-            },
+            // {
+            //   key: "classes",
+            //   icon: <FundProjectionScreenOutlined />,
+            //   label: "Upload Classes",
+            // },
             {
               key: "enrollments",
               icon: <ShoppingOutlined />,
@@ -178,7 +183,9 @@ const MainLayout: React.FC = () => {
           ]}
         />
       </Sider>
-      <Layout style={{ marginLeft: collapsed ? 80 : 260, transition: "all 0.2s" }}>
+      <Layout
+        style={{ marginLeft: collapsed ? 80 : 260, transition: "all 0.2s" }}
+      >
         <Header
           style={{
             padding: "0 24px",
@@ -205,9 +212,12 @@ const MainLayout: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button type="text" icon={<QuestionCircleOutlined />} />
 
-            <Dropdown menu={{items: notifications }} placement="bottomRight">
+            <Dropdown menu={{ items: notifications }} placement="bottomRight">
               <Badge count={3} dot>
-                <Button type="text" icon={<BellOutlined style={{ fontSize: "20px" }} />} />
+                <Button
+                  type="text"
+                  icon={<BellOutlined style={{ fontSize: "20px" }} />}
+                />
               </Badge>
             </Dropdown>
 
@@ -216,7 +226,9 @@ const MainLayout: React.FC = () => {
                 <Avatar style={{ backgroundColor: colorPrimary }}>
                   <UserOutlined />
                 </Avatar>
-                {!collapsed && <span className="ml-2 hidden md:inline">Admin User</span>}
+                {!collapsed && (
+                  <span className="ml-2 hidden md:inline">Admin User</span>
+                )}
               </Button>
             </Dropdown>
           </div>
@@ -230,12 +242,14 @@ const MainLayout: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Outlet/>
+          <Outlet />
         </Content>
-        <Footer style={{ textAlign: "center" }}>Sohoj Pora LMS Admin Panel ©{new Date().getFullYear()}</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          Sohoj Pora LMS Admin Panel ©{new Date().getFullYear()}
+        </Footer>
       </Layout>
     </Layout>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

@@ -2,35 +2,37 @@ import React, { useState } from "react";
 import { Input, Button, Card } from "antd";
 import { LockOutlined } from "@ant-design/icons";
 import { ShieldAlert, ArrowRight } from "lucide-react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import dash1 from "../assets/dsh1.png";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("bardenhill@gmail.com");
+  const [email, setEmail] = useState("admin@gmail.com");
   const [password, setPassword] = useState("00000000");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeSlide,setActiveSlide] = useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
   const navigate = useNavigate();
-
 
   const slideWithContent = [
     {
-        image:'../../public/images/dsh2.png?height=800&width=600',
-        title:'Control Center',
-        description:'Manage your entire learning management system from one powerful dashboard. Monitor users, content, and analytics.'
+      image: "../../public/images/dsh2.png?height=800&width=600",
+      title: "Control Center",
+      description:
+        "Manage your entire learning management system from one powerful dashboard. Monitor users, content, and analytics.",
     },
     {
-        image:'../../public/images/dsh1.png?height=800&width=600',
-        title:'User Management',
-        description:'Easily manage users, assign roles, and monitor activity across the platform.'
+      image: "../../public/images/dsh1.png?height=800&width=600",
+      title: "User Management",
+      description:
+        "Easily manage users, assign roles, and monitor activity across the platform.",
     },
     {
-        image:'../../public/images/dsh3.png?height=800&width=600',
-        title:'Analytics Dashboard',
-        description:'Gain insights into user engagement, course performance, and overall system health.'
-    }   
-  ]
-
+      image: "../../public/images/dsh3.png?height=800&width=600",
+      title: "Analytics Dashboard",
+      description:
+        "Gain insights into user engagement, course performance, and overall system health.",
+    },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,34 +71,35 @@ const Login: React.FC = () => {
           {/* Left side - Image */}
           <div className="relative hidden overflow-hidden rounded-l-xl md:block">
             <div className="absolute  inset-0 bg-gradient-to-br from-purple-900/90 to-indigo-900/90 mix-blend-multiply">
-            <img
-              src={slideWithContent[activeSlide].image}
-              alt="Admin Dashboard"
-              className="h-full  transition-all  w-full object-cover brightness-90"
-            />
-            <div className="absolute inset-0 flex flex-col items-start justify-end p-8 text-white">
-              <div className="mb-2 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-300 backdrop-blur-sm">
-                ADMINISTRATOR PORTAL
-              </div>
-              <h2 className="mb-2 text-3xl font-bold">{slideWithContent[activeSlide].title}</h2>
-              <p className="mb-4 max-w-md text-slate-300">
-                {slideWithContent[activeSlide].description}
-              </p>
-              <div className="flex gap-2">
-                {slideWithContent.map((_,index)=> (
+              <img
+                src={dash1}
+                alt="Admin Dashboard"
+                className="h-full  transition-all  w-full object-cover brightness-90"
+              />
+              <div className="absolute inset-0 flex flex-col items-start justify-end p-8 text-white">
+                <div className="mb-2 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-300 backdrop-blur-sm">
+                  ADMINISTRATOR PORTAL
+                </div>
+                <h2 className="mb-2 text-3xl font-bold">
+                  {slideWithContent[activeSlide].title}
+                </h2>
+                <p className="mb-4 max-w-md text-slate-300">
+                  {slideWithContent[activeSlide].description}
+                </p>
+                <div className="flex gap-2">
+                  {slideWithContent.map((_, index) => (
                     <div
-                        key={index}
-                        onClick={()=> setActiveSlide(index)}
-                        className={`h-1 ${
-                            activeSlide === index ? 'w-7 bg-amber-400':'w-3 bg-slate-500'
-                        } rounded-full cursor-pointer`}
-                    >
-                    
-                    </div>
-                )
-                )}
+                      key={index}
+                      onClick={() => setActiveSlide(index)}
+                      className={`h-1 ${
+                        activeSlide === index
+                          ? "w-7 bg-amber-400"
+                          : "w-3 bg-slate-500"
+                      } rounded-full cursor-pointer`}
+                    ></div>
+                  ))}
+                </div>
               </div>
-            </div>
             </div>
           </div>
 
@@ -178,10 +181,7 @@ const Login: React.FC = () => {
                     className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-amber-500 focus:ring-amber-500"
                   />
                 </div>
-                <label
-                  htmlFor="remember"
-                  className="text-sm text-slate-400"
-                >
+                <label htmlFor="remember" className="text-sm text-slate-400">
                   Keep me signed in for 30 days
                 </label>
               </div>
@@ -225,9 +225,7 @@ const Login: React.FC = () => {
               <div className="mt-6 rounded-lg border border-slate-700 bg-amber-500/10 p-4 text-sm text-amber-300">
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="h-5 w-5" />
-                  <span className="font-medium">
-                    Administrator Access Only
-                  </span>
+                  <span className="font-medium">Administrator Access Only</span>
                 </div>
                 <p className="mt-1 text-xs text-slate-400">
                   This portal is restricted to authorized system administrators.
@@ -241,17 +239,11 @@ const Login: React.FC = () => {
                 © 2025 Sohoj-Pora LMS. All rights reserved.
               </p>
               <p className="mt-1">
-                <Link
-                  to="#"
-                  className="text-amber-400 hover:text-amber-300"
-                >
+                <Link to="#" className="text-amber-400 hover:text-amber-300">
                   Privacy Policy
                 </Link>{" "}
                 •{" "}
-                <Link
-                  to="#"
-                  className="text-amber-400 hover:text-amber-300"
-                >
+                <Link to="#" className="text-amber-400 hover:text-amber-300">
                   Terms of Service
                 </Link>
               </p>
